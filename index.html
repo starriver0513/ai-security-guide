@@ -1,0 +1,860 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AIセキュリティ 完全攻略｜保存版資料</title>
+<meta name="description" content="ChatGPT・Claude・Geminiの学習と履歴の設定手順、入れてはいけない情報のチェックリスト、ぼかして頼むプロンプト、AIに任せる範囲（権限）の設定、使うべきAIの選び方、入れてしまった時の対処までまとめた資料です。">
+<meta property="og:title" content="AIセキュリティ 完全攻略｜保存版資料">
+<meta property="og:description" content="ChatGPT・Claude・Geminiの学習と履歴の設定手順、入れてはいけない情報のチェックリスト、ぼかして頼むプロンプト、AIに任せる範囲（権限）の設定、使うべきAIの選び方、入れてしまった時の対処までまとめた資料です。">
+<meta name="theme-color" content="#0b2a5b">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=M+PLUS+1:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  
+  --ink:#0a1020;          
+  --ink-soft:#22304a;     
+  --muted:#5c6880;        
+  --navy:#0b2a5b;         
+  --blue:#0866ff;         
+  --blue-dark:#073b9a;
+  --cyan:#28d3ff;         
+  --sky:#d9eaff;
+  --blue-soft:#eef5ff;
+  --line:#d8e4f6;
+  --bg:#f6f9ff;
+  --white:#fff;
+  --code-bg:#0b1834;      
+  --ok:#0f9d58;
+  --warn:#f59e0b;
+  --grad-hero:linear-gradient(135deg,#040c22 0%,#062a68 48%,#0a63d6 100%);
+  --grad-accent:linear-gradient(135deg,var(--cyan) 0%,var(--blue) 100%);
+  --shadow:0 18px 44px rgba(8,32,80,.12);
+  --shadow-hover:0 26px 64px rgba(8,32,80,.22);
+  --radius:18px;
+  --radius-sm:12px;
+  --max:1040px;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;overflow-x:hidden;scroll-padding-top:24px}
+body{
+  margin:0;color:var(--ink);background:var(--bg);
+  font-family:'Noto Sans JP',-apple-system,BlinkMacSystemFont,'Hiragino Sans',Meiryo,sans-serif;
+  line-height:1.95;font-size:16px;overflow-x:hidden;
+  background-image:
+    radial-gradient(circle at 12% -4%,rgba(8,102,255,.10),transparent 34%),
+    radial-gradient(circle at 92% 6%,rgba(40,211,255,.10),transparent 30%);
+  background-attachment:fixed;
+}
+a{color:var(--blue);font-weight:700;text-underline-offset:3px;text-decoration-thickness:2px}
+img{max-width:100%;height:auto;display:block}
+
+.progress{position:fixed;inset:0 0 auto 0;height:4px;z-index:60;background:transparent}
+.progress span{display:block;height:100%;width:0;background:var(--grad-accent);box-shadow:0 0 14px rgba(8,102,255,.6);transition:width .1s linear}
+
+.page{width:min(var(--max),calc(100vw - 32px));margin:0 auto;padding:28px 0 96px}
+
+.hero{position:relative;overflow:hidden;border-radius:26px;color:#fff;padding:clamp(30px,5vw,64px);background:var(--grad-hero);box-shadow:var(--shadow-hover)}
+.hero::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:linear-gradient(135deg,rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(45deg,rgba(255,255,255,.05) 1px,transparent 1px);
+  background-size:74px 74px;opacity:.6}
+.hero::after{content:"";position:absolute;width:280px;height:280px;right:-90px;top:-110px;border-radius:50%;
+  background:radial-gradient(circle,rgba(40,211,255,.35),transparent 70%);animation:float 7s ease-in-out infinite;pointer-events:none}
+.hero-inner{position:relative;z-index:1}
+.hero-glow{position:absolute;inset:-40%;z-index:0;pointer-events:none;opacity:.5;
+  background:radial-gradient(320px circle at var(--mx,50%) var(--my,50%),rgba(120,190,255,.30),transparent 60%);transition:opacity .4s ease}
+@keyframes float{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(0,-14px,0)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+
+.badge{display:inline-flex;align-items:center;gap:8px;padding:7px 16px;border-radius:999px;
+  background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);
+  font-size:12px;font-weight:800;letter-spacing:.1em}
+.badge .dot{width:8px;height:8px;border-radius:50%;background:#4ade80}
+.hero h1{margin:18px 0 14px;font-family:'M PLUS 1',sans-serif;font-size:clamp(27px,5.4vw,52px);line-height:1.28;font-weight:800;letter-spacing:-.01em}
+.hero h1 .grad{background:linear-gradient(135deg,#8fd6ff,#fff 60%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hero .lead{margin:0;font-size:clamp(14px,2.2vw,17px);opacity:.94;max-width:44em}
+.hero-meta{margin-top:16px;font-size:13px;opacity:.8}
+.hero-cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
+.hero-figure{margin-top:28px;border-radius:18px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(255,255,255,.16),0 16px 40px rgba(0,0,0,.42)}
+.hero-stats{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+.hero-stat{flex:1 1 150px;padding:14px 16px;border-radius:14px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.16)}
+.hero-stat b{display:block;font-family:'M PLUS 1',sans-serif;font-size:clamp(20px,3.4vw,28px);line-height:1.3}
+.hero-stat span{font-size:12px;opacity:.82}
+
+.btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:50px;padding:13px 24px;
+  overflow:hidden;border-radius:14px;background:var(--grad-accent);color:#fff!important;font-weight:900;text-decoration:none;
+  box-shadow:0 12px 30px rgba(8,102,255,.34);transition:transform .26s ease,box-shadow .26s ease}
+.btn::before{content:"";position:absolute;inset:0;transform:translateX(-130%);
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.38),transparent);transition:transform .6s ease}
+.btn:hover{transform:translateY(-3px);box-shadow:0 18px 42px rgba(8,102,255,.46)}
+.btn:hover::before{transform:translateX(130%)}
+.btn.ghost{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.4);box-shadow:none}
+.btn.solid{background:var(--navy);box-shadow:0 12px 30px rgba(11,42,91,.28)}
+.btn.small{min-height:40px;padding:9px 16px;font-size:13px;border-radius:11px;box-shadow:var(--shadow)}
+
+.toollink{display:inline-flex;align-items:center;gap:7px;margin:4px 8px 4px 0;padding:8px 14px;border-radius:999px;
+  background:var(--white);border:1px solid var(--line);color:var(--blue)!important;font-size:13.5px;font-weight:800;
+  text-decoration:none;box-shadow:0 6px 16px rgba(8,32,80,.07);transition:transform .2s ease,border-color .2s ease}
+.toollink:hover{transform:translateY(-2px);border-color:var(--blue)}
+.toollink::after{content:"↗";font-size:11px;opacity:.7}
+
+.toc{margin:30px 0 0;padding:24px 26px;border-radius:var(--radius);background:var(--white);border:1px solid var(--line);box-shadow:var(--shadow)}
+.toc h2{margin:0 0 14px;font-family:'M PLUS 1',sans-serif;font-size:17px;color:var(--navy)}
+.toc ol{margin:0;padding-left:0;list-style:none;counter-reset:toc;display:grid;gap:6px;grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr))}  
+.toc li{counter-increment:toc}
+.toc a{display:flex;gap:10px;align-items:baseline;padding:8px 10px;border-radius:10px;color:var(--ink-soft)!important;
+  font-weight:700;font-size:14.5px;text-decoration:none;transition:background .2s ease,color .2s ease}
+.toc a::before{content:counter(toc,decimal-leading-zero);color:var(--blue);font-family:'M PLUS 1',sans-serif;font-size:13px}
+.toc a:hover,.toc a.active{background:var(--blue-soft);color:var(--navy)!important}
+
+.sidenav{position:fixed;right:22px;top:50%;transform:translateY(-50%);z-index:40;display:none;flex-direction:column;gap:11px}
+.sidenav a{position:relative;width:11px;height:11px;border-radius:50%;background:var(--line);transition:background .25s ease,transform .25s ease}
+.sidenav a.active{background:var(--blue);transform:scale(1.45)}
+.sidenav a span{position:absolute;right:20px;top:50%;transform:translateY(-50%) translateX(6px);white-space:nowrap;
+  padding:5px 10px;border-radius:8px;background:var(--navy);color:#fff;font-size:11.5px;font-weight:700;
+  opacity:0;pointer-events:none;transition:opacity .2s ease,transform .2s ease}
+.sidenav a:hover span{opacity:1;transform:translateY(-50%) translateX(0)}
+@media (min-width:1240px){.sidenav{display:flex}}
+
+.sec{margin-top:56px}
+.sec-label{margin:0;text-align:center;font-family:'M PLUS 1',sans-serif;font-size:12.5px;letter-spacing:.16em;color:var(--blue);font-weight:800}
+.sec-title{margin:6px 0 6px;text-align:center;font-family:'M PLUS 1',sans-serif;font-size:clamp(21px,4.4vw,31px);line-height:1.42;color:var(--navy);font-weight:800}
+.sec-lead{margin:0 auto;max-width:36em;text-align:center;font-size:14.5px;color:var(--muted)}
+
+.card{margin-top:22px;padding:clamp(20px,3.4vw,32px);border-radius:var(--radius);background:var(--white);
+  border:1px solid var(--line);box-shadow:var(--shadow);transition:transform .3s ease,box-shadow .3s ease}
+.card:hover{box-shadow:var(--shadow-hover)}
+.card h3{margin:26px 0 10px;font-family:'M PLUS 1',sans-serif;font-size:clamp(17px,2.8vw,21px);color:var(--navy);line-height:1.5}
+.card h3:first-child{margin-top:0}
+.card p{margin:0 0 12px}
+.card p:last-child{margin-bottom:0}
+.hl{background:linear-gradient(transparent 62%,rgba(8,102,255,.22) 62%);font-weight:800}
+
+.tilt{transform-style:preserve-3d;transition:transform .3s ease}
+
+.step{display:flex;gap:16px;padding:20px 0;border-top:1px dashed var(--line)}
+.step:first-of-type{border-top:0;padding-top:4px}
+.step-no{flex:0 0 42px;height:42px;display:flex;align-items:center;justify-content:center;border-radius:12px;
+  background:var(--grad-accent);color:#fff;font-family:'M PLUS 1',sans-serif;font-weight:800;font-size:17px;
+  box-shadow:0 8px 20px rgba(8,102,255,.28)}
+.step-body{flex:1;min-width:0}
+.step-body h4{margin:6px 0 8px;font-family:'M PLUS 1',sans-serif;font-size:16.5px;color:var(--navy);line-height:1.55}
+.step-body p{margin:0 0 10px;font-size:15px}
+
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin-top:6px}
+.grid-item{padding:20px;border-radius:var(--radius-sm);background:var(--blue-soft);border:1px solid var(--line)}
+.grid-item .tag{display:inline-block;margin-bottom:8px;padding:3px 11px;border-radius:999px;background:var(--navy);color:#fff;font-size:11.5px;font-weight:800}
+.grid-item h4{margin:0 0 7px;font-family:'M PLUS 1',sans-serif;font-size:16px;color:var(--navy);line-height:1.5}
+.grid-item p{margin:0;font-size:14px;color:var(--ink-soft)}
+
+.takeaway{margin:0;padding:0;list-style:none;counter-reset:tk}
+.takeaway li{counter-increment:tk;position:relative;padding:14px 0 14px 46px;border-bottom:1px dashed var(--line)}
+.takeaway li:last-child{border-bottom:0}
+.takeaway li::before{content:counter(tk);position:absolute;left:0;top:14px;width:30px;height:30px;border-radius:9px;
+  display:flex;align-items:center;justify-content:center;background:var(--navy);color:#fff;font-size:14px;font-weight:800}
+.takeaway b{display:block;color:var(--navy);font-size:16px;line-height:1.6}
+.takeaway span{display:block;margin-top:5px;font-size:14.5px;color:var(--ink-soft)}
+
+.check{margin:0;padding:0;list-style:none}
+.check li{position:relative;padding:9px 0 9px 32px;font-size:15px}
+.check li::before{content:"";position:absolute;left:4px;top:17px;width:14px;height:8px;border-left:3px solid var(--blue);border-bottom:3px solid var(--blue);transform:rotate(-45deg)}
+
+.prompt{position:relative;margin:18px 0;border-radius:var(--radius-sm);background:var(--code-bg);
+  box-shadow:0 16px 38px rgba(4,20,54,.32);overflow:hidden}
+.prompt-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 16px;
+  background:rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.09)}
+.prompt-head b{color:#cfe4ff;font-size:12.5px;font-weight:800;letter-spacing:.04em;min-width:0}
+.copy{flex-shrink:0;white-space:nowrap;  
+  display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border:0;border-radius:9px;cursor:pointer;
+  background:var(--blue);color:#fff;font-size:12px;font-weight:800;font-family:inherit;transition:background .2s ease,transform .2s ease}
+.copy:hover{transform:translateY(-1px)}
+.copy.done{background:var(--ok)}
+.prompt pre{margin:0;padding:18px 18px 20px;overflow-x:auto;color:#e6f0ff;font-size:13.5px;line-height:1.85;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,'Noto Sans JP',monospace;white-space:pre-wrap;word-break:break-word}
+
+.prompt.code pre{white-space:pre;word-break:normal;overflow-wrap:normal;font-size:12.5px;-webkit-overflow-scrolling:touch}
+
+.figure{margin:22px 0;border-radius:var(--radius-sm);overflow:hidden;background:var(--white);border:1px solid var(--line);box-shadow:var(--shadow)}
+.figure img{width:100%}
+.figure figcaption{padding:12px 16px;font-size:13px;color:var(--muted);background:var(--blue-soft);border-top:1px solid var(--line)}
+
+.video{margin:20px 0 0;border-radius:var(--radius-sm);overflow:hidden;background:#050d1f;aspect-ratio:16/9;box-shadow:var(--shadow)}
+.video iframe,.video video{width:100%;height:100%;border:0;display:block}
+.video-note{margin:12px 0 0;font-size:13.5px;color:var(--muted)}
+
+.table-scroll{margin:18px 0;overflow-x:auto;border-radius:var(--radius-sm);border:1px solid var(--line);background:var(--white)}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:14.5px}
+th,td{padding:12px 14px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:var(--navy);color:#fff;font-weight:800;white-space:nowrap}
+tbody tr:nth-child(even){background:var(--blue-soft)}
+tbody tr:last-child td{border-bottom:0}
+
+.note{margin:16px 0;padding:14px 18px;border-radius:var(--radius-sm);background:var(--blue-soft);border-left:4px solid var(--blue);font-size:14px;color:var(--ink-soft)}
+.note.warn{background:#fff8ec;border-left-color:var(--warn)}
+.note b{color:var(--navy)}
+.example{margin:12px 0;padding:14px 18px;border-radius:var(--radius-sm);background:#f4f8ff;border:1px dashed var(--blue);font-size:14px}
+
+.closing{margin-top:64px;padding:clamp(30px,5vw,52px);border-radius:26px;color:#fff;text-align:center;
+  background:var(--grad-hero);box-shadow:var(--shadow-hover);position:relative;overflow:hidden}
+.closing::after{content:"";position:absolute;width:340px;height:340px;left:-120px;bottom:-160px;border-radius:50%;
+  background:radial-gradient(circle,rgba(40,211,255,.28),transparent 70%);animation:float 8s ease-in-out infinite}
+.closing-inner{position:relative;z-index:1}
+.closing h2{margin:0 0 12px;font-family:'M PLUS 1',sans-serif;font-size:clamp(20px,4vw,30px);line-height:1.45}
+.closing p{margin:0 auto 10px;max-width:38em;font-size:15px;opacity:.94}
+.closing .btn{margin-top:20px}
+.bonus{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));margin:24px 0 4px;text-align:left}
+.bonus div{padding:14px 16px;border-radius:13px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18)}
+.bonus b{display:block;font-family:'M PLUS 1',sans-serif;font-size:19px}
+.bonus span{font-size:12.5px;opacity:.85}
+
+.foot{margin-top:34px;text-align:center;font-size:12.5px;color:var(--muted)}
+
+.totop{position:fixed;right:20px;bottom:22px;z-index:50;width:48px;height:48px;border:0;border-radius:50%;cursor:pointer;
+  background:var(--navy);color:#fff;font-size:19px;box-shadow:var(--shadow);opacity:0;pointer-events:none;
+  transition:opacity .3s ease,transform .3s ease}
+.totop.show{opacity:1;pointer-events:auto}
+.totop:hover{transform:translateY(-3px)}
+
+.rv{opacity:1;transform:none;transition:opacity .7s ease,transform .7s ease}
+.motion-ready .rv{opacity:0;transform:translateY(26px)}
+.motion-ready .rv.in{opacity:1;transform:none}
+
+@media (max-width:640px){
+  body{font-size:15.5px;line-height:1.9}
+  .step{gap:12px}
+  .step-no{flex-basis:36px;height:36px;font-size:15px}
+  .totop{right:14px;bottom:14px;width:44px;height:44px}
+}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .rv,.motion-ready .rv{opacity:1;transform:none}
+}
+</style>
+<style>
+.diagram{margin:20px 0;padding:18px;border-radius:var(--radius-sm);background:var(--blue-soft);border:1px solid var(--line);overflow-x:auto}
+.diagram svg{display:block;width:100%;min-width:620px;height:auto}
+td:first-child{min-width:7.5em}
+.diagram figcaption{margin-top:10px;font-size:13px;color:var(--muted)}
+.rank{display:inline-block;margin-right:8px;padding:2px 12px;border-radius:999px;background:var(--grad-accent);color:#fff;font-size:13px;font-weight:900;vertical-align:middle}
+.mini{padding:18px 0;border-top:1px dashed var(--line)}
+.mini:first-of-type{border-top:0;padding-top:4px}
+.mini h3{margin-top:0}
+</style>
+</head>
+<body>
+
+<div class="progress"><span id="bar"></span></div>
+
+<nav class="sidenav" id="sidenav" aria-label="セクション">
+  <a href="#s1"><span>考え方</span></a>
+  <a href="#s2"><span>ChatGPT</span></a>
+  <a href="#s3"><span>Claude</span></a>
+  <a href="#s4"><span>Gemini</span></a>
+  <a href="#s5"><span>プランとアカウント</span></a>
+  <a href="#s6"><span>入れてはいけない</span></a>
+  <a href="#s7"><span>ぼかし方</span></a>
+  <a href="#s8"><span>嘘を防ぐ</span></a>
+  <a href="#s9"><span>入れてしまった時</span></a>
+  <a href="#s10"><span>任せる範囲</span></a>
+  <a href="#s11"><span>AIの選び方</span></a>
+  <a href="#s12"><span>今日やること</span></a>
+</nav>
+
+<div class="page">
+  <header class="hero" id="hero">
+    <div class="hero-glow" id="glow"></div>
+    <div class="hero-inner">
+      <span class="badge"><span class="dot"></span>保存版資料｜設定手順とチェックリスト</span>
+      <h1>これ一本で全部わかる<br><span class="grad">AIセキュリティ <span style="white-space:nowrap">完全攻略</span></span></h1>
+      <p class="lead">保存版資料のお受け取り、ありがとうございます。この資料では、ChatGPT・Claude・Geminiの学習と履歴の設定手順、絶対に入れてはいけない情報のチェックリスト、ぼかして頼むためのプロンプト、AIに任せる範囲（権限）の設定、使うべきAIの選び方、うっかり入れてしまった時の対処までをまとめています。</p>
+
+      <div class="hero-stats">
+        <div class="hero-stat"><b>3つ</b><span>ChatGPT・Claude・Geminiの設定</span></div>
+        <div class="hero-stat"><b>5つ</b><span>入れてはいけない情報</span></div>
+        <div class="hero-stat"><b>5分</b><span>設定にかかる時間の目安</span></div>
+      </div>
+
+      <div class="hero-cta">
+        <a class="btn" href="#s1">資料を読みはじめる →</a>
+      </div>
+
+      <p class="hero-meta">※ このページはブックマークして、設定しながら見返してください。内容は2026年10月時点の確認です。設定の名前や場所はアプリの更新で変わることがあります。その時は各社の公式ヘルプを確認してください。</p>
+    </div>
+  </header>
+
+  <nav class="toc rv">
+    <h2>この資料の中身</h2>
+    <ol>
+      <li><a href="#s1">まず知っておく2つの考え方</a></li>
+      <li><a href="#s2">ChatGPTの設定</a></li>
+      <li><a href="#s3">Claudeの設定</a></li>
+      <li><a href="#s4">Geminiの設定</a></li>
+      <li><a href="#s5">有料プランと会社向けプラン・アカウントの守り方</a></li>
+      <li><a href="#s6">絶対に入れてはいけない情報のチェックリスト</a></li>
+      <li><a href="#s7">ぼかして頼むプロンプト</a></li>
+      <li><a href="#s8">AIの間違いで損をしない一言</a></li>
+      <li><a href="#s9">うっかり入れてしまった時の対処</a></li>
+      <li><a href="#s10">AIに任せる範囲（権限）の設定</a></li>
+      <li><a href="#s11">使うべきAIの選び方</a></li>
+      <li><a href="#s12">今日やる3つとチェックリスト</a></li>
+    </ol>
+  </nav>
+
+  <section class="sec" id="s1" data-short="考え方">
+    <p class="sec-label rv">STEP 01</p>
+    <h2 class="sec-title rv">まず知っておく2つの考え方</h2>
+    <p class="sec-lead rv">設定の前に、この2つだけ覚えておけば、迷った時に自分で判断できます。</p>
+
+    <div class="card rv">
+      <h3>1. AIに入れる＝外に渡している</h3>
+      <p>ChatGPTもClaudeもGeminiも、入れた文章はネットを通って、AIを作っている会社のコンピューターに送られ、そこで答えが作られています。スマホやパソコンの中だけで完結しているわけではありません。2023年には、ChatGPTの不具合で、一部の人の画面にほかの人の会話のタイトルが見えてしまったことがあり、OpenAIが公式に発表しています。<span class="hl">外の人に見られて困るものは、基本的にそのまま入れない。</span>これが大前提です。</p>
+
+      <h3>2. AIは、仕事はできるけど騙されやすい素直な社員</h3>
+      <p>頼んだことはすごい速さでやってくれますが、悪い人に「これやって」と言われても、疑わずにやってしまうことがあります。新しく入った社員に、会社の金庫の鍵をいきなり全部渡したりしないのと同じで、何を渡すか、どこまで任せるかを最初に決めておけば、怖いことはぐっと減らせます。</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 960 200" role="img" aria-label="AIを安全に使う4つの対策。設定、頼み方、任せる範囲、選び方">
+          <rect x="20" y="40" width="210" height="120" rx="14" fill="#0b2a5b"/>
+          <text x="125" y="88" fill="#fff" font-size="15" text-anchor="middle">対策1</text>
+          <text x="125" y="120" fill="#fff" font-size="21" font-weight="700" text-anchor="middle">AIの設定</text>
+          <rect x="255" y="40" width="210" height="120" rx="14" fill="#0866ff"/>
+          <text x="360" y="88" fill="#fff" font-size="15" text-anchor="middle">対策2</text>
+          <text x="360" y="120" fill="#fff" font-size="21" font-weight="700" text-anchor="middle">頼み方</text>
+          <rect x="490" y="40" width="210" height="120" rx="14" fill="#1a8cff"/>
+          <text x="595" y="88" fill="#fff" font-size="15" text-anchor="middle">対策3</text>
+          <text x="595" y="120" fill="#fff" font-size="21" font-weight="700" text-anchor="middle">任せる範囲</text>
+          <rect x="725" y="40" width="210" height="120" rx="14" fill="#28d3ff"/>
+          <text x="830" y="88" fill="#0b2a5b" font-size="15" text-anchor="middle">対策4</text>
+          <text x="830" y="120" fill="#0b2a5b" font-size="21" font-weight="700" text-anchor="middle">AIの選び方</text>
+        </svg>
+        <figcaption>この資料は、この4つの順番で進みます。どれも今日からすぐできることです。</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="sec" id="s2" data-short="ChatGPT">
+    <p class="sec-label rv">STEP 02</p>
+    <h2 class="sec-title rv">ChatGPTの設定</h2>
+    <p class="sec-lead rv">個人向けのアカウント（無料・Plus・Pro）は、最初は会話がAIの学習に使われる設定になっています。</p>
+
+    <div class="card rv">
+      <h3>学習に使わせない</h3>
+      <div class="step">
+        <div class="step-no">1</div>
+        <div class="step-body">
+          <h4>自分のアイコン →「設定」→「データコントロール」</h4>
+          <p>「すべての人のためにモデルを改善する」という項目があります。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-no">2</div>
+        <div class="step-body">
+          <h4>オフにする</h4>
+          <p>オフにしても、会話の履歴は残るので使い勝手は変わりません。</p>
+        </div>
+      </div>
+      <a class="toollink" href="https://help.openai.com/en/articles/7730893-data-controls-faq" target="_blank" rel="noopener">Data controls in ChatGPT（OpenAI公式ヘルプ）</a>
+
+      <h3>履歴に残さないで話す「一時チャット」</h3>
+      <p>画面の上にあるボタンから切り替えられます。一時チャットの会話は履歴に残らず、メモリにも使われず、学習にも使われません。ただし、安全のために最大30日は会社の側に保管されます。「何を入れても大丈夫」ではないので、履歴に残したくない相談をする時に使い分けてください。</p>
+      <a class="toollink" href="https://help.openai.com/en/articles/8914046-temporary-chat-in-chatgpt" target="_blank" rel="noopener">Temporary chat in ChatGPT（OpenAI公式ヘルプ）</a>
+
+      <h3>AIが覚えていること（メモリ）を見直す</h3>
+      <p>ChatGPTは、会話の中で知った仕事のことや家族のことを覚えて、次の会話でも使ってくれます。便利ですが、覚えてほしくないことが入っていたら消しておきましょう。「設定」→「パーソナライズ」のメモリの項目から、覚えている内容を確認・削除できます。<b>会話を消しても、そこから覚えたメモリは別に残ることがある</b>ので、メモリも一緒に確認してください。</p>
+      <a class="toollink" href="https://help.openai.com/en/articles/8590148-memory-faq" target="_blank" rel="noopener">Memory in ChatGPT（OpenAI公式ヘルプ）</a>
+
+      <h3>共有リンクに気をつける</h3>
+      <p>会話を人に見せるための共有リンクは、そのURLを知っている人なら誰でも中身を見られます。2025年には、共有する時に「検索に出してもいい」にチェックを入れた会話がGoogleの検索に出てしまい、OpenAIがその機能を止めました。</p>
+      <div class="note"><b>覚えておくこと：</b>人に見せる会話には、仕事の情報を入れない。見せ終わったら、共有リンクを消す。共有したリンクは「設定」→「データコントロール」の共有リンクの管理から確認できます。</div>
+    </div>
+  </section>
+
+  <section class="sec" id="s3" data-short="Claude">
+    <p class="sec-label rv">STEP 03</p>
+    <h2 class="sec-title rv">Claudeの設定</h2>
+    <p class="sec-lead rv">個人向けのプラン（無料・Pro・Max）は、学習に使うかどうかを自分で選ぶ設定があります。</p>
+
+    <div class="card rv">
+      <h3>学習に使わせない</h3>
+      <div class="step">
+        <div class="step-no">1</div>
+        <div class="step-body">
+          <h4>自分のアイコン →「設定」→「プライバシー」</h4>
+          <p>「Claudeの改善にご協力ください」（英語の画面ではModel Improvement）という項目があります。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-no">2</div>
+        <div class="step-body">
+          <h4>オフにする</h4>
+          <p>オフにしてもClaudeの賢さは変わりません。自分の会話を、これからのAIの教材に使わせないという設定です。仕事で使うなら、最初に必ず確認してください。</p>
+        </div>
+      </div>
+      <a class="toollink" href="https://privacy.claude.com/en/articles/10023580-is-my-data-used-for-model-training" target="_blank" rel="noopener">Is my data used for model training?（Anthropic公式）</a>
+
+      <h3>履歴に残さないで話す「シークレットチャット」</h3>
+      <p>画面の上にあるボタンから切り替えられます。シークレットチャットの会話は、学習の設定がオンのままでも学習に使われません。ただし、安全のために最大30日は会社の側に保管されます。</p>
+
+      <h3>AIが覚えていること（メモリ）を見直す</h3>
+      <p>Claudeも、過去の会話から仕事のことを覚えて使ってくれます。「設定」の中のメモリの項目（画面によっては「Your Claude」→ メモリの「管理」）から、覚えている内容を見て、直したり消したりできます。会話の中で「〇〇のことは忘れて」と頼むこともできます。</p>
+      <a class="toollink" href="https://support.claude.com/en/articles/11817273-use-claude-s-chat-search-and-memory-to-build-on-previous-context" target="_blank" rel="noopener">Claudeのメモリ（Claude公式ヘルプ）</a>
+    </div>
+  </section>
+
+  <section class="sec" id="s4" data-short="Gemini">
+    <p class="sec-label rv">STEP 04</p>
+    <h2 class="sec-title rv">Geminiの設定</h2>
+    <p class="sec-lead rv">Geminiは、会話の保存と学習が1つのスイッチになっています。</p>
+
+    <div class="card rv">
+      <h3>学習に使わせない</h3>
+      <div class="step">
+        <div class="step-no">1</div>
+        <div class="step-body">
+          <h4>「設定とヘルプ」→「アクティビティ」</h4>
+          <p>パソコンなら gemini.google.com を開いて、メニューの「設定とヘルプ」から「アクティビティ」を開きます。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-no">2</div>
+        <div class="step-body">
+          <h4>「オフにする」を選ぶ</h4>
+          <p>これまでの会話も消したい時は「オフにしてアクティビティを削除」を選びます。オフにしても、会話は最長72時間はアカウントに保存されます。</p>
+        </div>
+      </div>
+      <a class="toollink" href="https://support.google.com/gemini/answer/13278892?hl=ja" target="_blank" rel="noopener">Gemini アプリ アクティビティ（Google公式ヘルプ）</a>
+
+      <div class="note"><b>オフにする時の注意：</b>Geminiはここをオフにすると、過去の会話が見返せなくなったり、GmailやGoogleドライブとの連携が使えなくなったりします。オンのままだと、会話はGoogleのAIの改善に使われ、人がチェックすることもあります。連携のためにオンにしておく人は、仕事の情報は入れずに、次の「一時的なチャット」と使い分けてください。</div>
+
+      <h3>履歴に残さないで話す「一時的なチャット」</h3>
+      <p>画面のボタンから切り替えられます。会話は履歴に残らず、学習にも使われません。ただし、最長72時間は保存されます。</p>
+    </div>
+  </section>
+
+  <section class="sec" id="s5" data-short="プランとアカウント">
+    <p class="sec-label rv">STEP 05</p>
+    <h2 class="sec-title rv">有料プランと会社向けプラン・アカウントの守り方</h2>
+    <p class="sec-lead rv">お金を払っているから安全、とは限りません。</p>
+
+    <div class="card rv">
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>プラン</th><th>学習の扱い</th><th>やること</th></tr></thead>
+          <tbody>
+            <tr><td>個人向け・無料</td><td>設定がオンなら学習に使われる</td><td>STEP 02〜04で自分でオフにする</td></tr>
+            <tr><td>個人向け・有料（ChatGPT Plus・Claude Pro など）</td><td>無料と同じ。設定がオンなら学習に使われる</td><td>無料と同じく、自分でオフにする</td></tr>
+            <tr><td>会社向けのプラン（ChatGPTのBusiness・Enterprise、ClaudeのTeam・Enterprise、Google Workspace など）</td><td>入れた内容を学習に使わないと各社が約束している</td><td>会社の情報を本格的に扱うなら、こちらを使う</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>プランの名前と中身は変わることがあります。契約する前に、各社の公式ページで「学習に使わない」と書かれているかを確認してください。</p>
+
+      <h3>アカウントそのものを守る</h3>
+      <p>アカウントを乗っ取られると、保存されている会話を全部見られてしまいます。AIのアカウントと、ログインに使っているGoogleアカウントには、2段階認証を設定しておいてください。</p>
+      <ul class="check">
+        <li>ChatGPTのアカウントに2段階認証を設定した</li>
+        <li>Claude・Geminiにログインしているアカウント（Googleアカウント等）に2段階認証を設定した</li>
+        <li>パスワードを、ほかのサービスと使い回していない</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="sec" id="s6" data-short="入れてはいけない">
+    <p class="sec-label rv">STEP 06</p>
+    <h2 class="sec-title rv">絶対に入れてはいけない情報のチェックリスト</h2>
+    <p class="sec-lead rv">設定で守れるのは「学習に使われるか」まで。入れた情報がAIの会社に送られることは変わりません。</p>
+
+    <div class="card rv">
+      <h3>入れる前に確認する5つ</h3>
+      <ul class="check">
+        <li>パスワードやAPIキー（AIをほかのツールとつなぐ時に使う合い言葉）が入っていない</li>
+        <li>クレジットカードや銀行口座の番号が入っていない</li>
+        <li>免許証やマイナンバーカードなど、身分証の画像ではない</li>
+        <li>お客さんや他の人の個人情報（名前・住所・電話番号・メールアドレス）が入っていない</li>
+        <li>会社の外に出してはいけない情報が入っていない</li>
+      </ul>
+
+      <h3>見落としやすいもの</h3>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>場面</th><th>確認すること</th></tr></thead>
+          <tbody>
+            <tr><td>スクリーンショットを貼る</td><td>お客さんの名前やメールアドレス、通知の中身が写り込んでいないか</td></tr>
+            <tr><td>会議の文字起こし・メールをそのまま貼る</td><td>参加者や相手の名前、金額が入っていないか。STEP 07のようにぼかしてから貼る</td></tr>
+            <tr><td>ファイルを添付する</td><td>見せたいページ以外に、個人情報や社外秘のページが入っていないか</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>APIキーは特に注意</h3>
+      <p>APIキーが漏れると、顔も名前も知らない人に勝手に使われて、使った分の料金がこちらに請求されます。チャットに貼るのは絶対にやめてください。Claude Codeで使う時は、キーを入れておく専用のファイルを作ってもらい、そこに自分で貼ります。</p>
+      <div class="prompt">
+        <div class="prompt-head"><b>APIキーを入れる専用のファイルを作る（Claude Code）</b><button class="copy" type="button">コピー</button></div>
+        <pre>このフォルダに、APIキーを入れておく専用のファイルを作ってください。
+キーは僕が自分で貼るので、貼る場所だけ教えてください。
+このファイルの中身は、AIが読んだり外に送ったりしないように設定してください。</pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="s7" data-short="ぼかし方">
+    <p class="sec-label rv">STEP 07</p>
+    <h2 class="sec-title rv">ぼかして頼むプロンプト</h2>
+    <p class="sec-lead rv">AIは、話の流れさえ分かれば、ちゃんとした文章を作ってくれます。本当の名前を入れる必要はありません。</p>
+
+    <div class="card rv">
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>本当の情報</th><th>ぼかし方</th></tr></thead>
+          <tbody>
+            <tr><td>取引先の田中さん</td><td>Aさん</td></tr>
+            <tr><td>株式会社〇〇</td><td>取引先</td></tr>
+            <tr><td>年収512万円</td><td>年収は500万くらい</td></tr>
+            <tr><td>月の売上324万円</td><td>売上は月に数百万の規模</td></tr>
+            <tr><td>東京都〇〇区の住所</td><td>都内</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="prompt">
+        <div class="prompt-head"><b>名前をぼかしてお詫びのメールを作る</b><button class="copy" type="button">コピー</button></div>
+        <pre>取引先のAさんに、納品が1日遅れることをお詫びするメールを作ってください。
+丁寧だけど、重すぎない文章にしてください。</pre>
+      </div>
+      <div class="prompt">
+        <div class="prompt-head"><b>数字をぼかして相談する</b><button class="copy" type="button">コピー</button></div>
+        <pre>売上が月に数百万の規模の、個人でやっているオンライン講座のビジネスです。
+来月の集客を増やすために、今週からできることを3つ提案してください。</pre>
+      </div>
+      <div class="step">
+        <div class="step-no">1</div>
+        <div class="step-body">
+          <h4>出てきた文章の「Aさん」を、最後に自分で本当の名前に戻す</h4>
+          <p>戻すのはAIではなく、自分の手でやります。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-no">2</div>
+        <div class="step-body">
+          <h4>送る前に、戻し忘れがないか確認する</h4>
+          <p>「Aさん」のまま送ってしまうと、相手にとても失礼です。下のプロンプトで、仮の名前が残っていないかをAIに探してもらうこともできます。</p>
+        </div>
+      </div>
+      <div class="prompt">
+        <div class="prompt-head"><b>戻し忘れを探す</b><button class="copy" type="button">コピー</button></div>
+        <pre>次の文章の中に、「Aさん」「取引先」のような仮の名前や、「〇〇」のような埋め忘れが残っていないか探して、場所を教えてください。
+（ここに、名前を戻す前の文章を貼る）</pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="s8" data-short="嘘を防ぐ">
+    <p class="sec-label rv">STEP 08</p>
+    <h2 class="sec-title rv">AIの間違いで損をしない一言</h2>
+    <p class="sec-lead rv">情報を守るのと同じくらい大事なのが、AIの間違いで損をしないことです。</p>
+
+    <div class="card rv">
+      <p>AIは、分からないことでも、それっぽく答えてしまうことがあります。調べものを頼む時は、最後にこの一言を付けてください。</p>
+      <div class="prompt">
+        <div class="prompt-head"><b>嘘を防ぐ一言</b><button class="copy" type="button">コピー</button></div>
+        <pre>分からないことや不確かなことは、推測で答えずに「分からない」と答えてください。
+答えの根拠になった公式のURLも出してください。</pre>
+      </div>
+      <ul class="check">
+        <li>出てきたURLは、必ず自分で開いて確認した（AIは存在しないURLを出すこともある）</li>
+        <li>お金・健康・法律・契約のような大事な判断は、AIの答えだけで決めていない</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="sec" id="s9" data-short="入れてしまった時">
+    <p class="sec-label rv">STEP 09</p>
+    <h2 class="sec-title rv">うっかり入れてしまった時の対処</h2>
+    <p class="sec-lead rv">気づいた時点で、この順番で対処してください。</p>
+
+    <div class="card rv">
+      <div class="step">
+        <div class="step-no">1</div>
+        <div class="step-body">
+          <h4>その会話を削除する</h4>
+          <p>履歴から、その会話を消します。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-no">2</div>
+        <div class="step-body">
+          <h4>共有リンクを作っていたら消す</h4>
+          <p>人に見せるためにリンクを作っていた場合は、そのリンクも消します。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-no">3</div>
+        <div class="step-body">
+          <h4>メモリに残っていないか確認する</h4>
+          <p>会話を消しても、AIが覚えた内容は別に残ることがあります。STEP 02・03のメモリの画面で確認して、消しておきます。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-no">4</div>
+        <div class="step-body">
+          <h4>パスワードやAPIキーなら、すぐに変える・作り直す</h4>
+          <p>入れてしまったキーは、発行したサービスの画面で無効にして、新しいキーを作ります。パスワードはすぐに変えます。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="s10" data-short="任せる範囲">
+    <p class="sec-label rv">STEP 10</p>
+    <h2 class="sec-title rv">AIに任せる範囲（権限）の設定</h2>
+    <p class="sec-lead rv">基本は1つ。読むのは任せる。送る・消す・払うのように何かを変える操作は、必ず確認してもらう。</p>
+
+    <div class="card rv">
+      <p>最近のAIは、GmailやGoogleカレンダーのような普段のツールとつなぐと、メールを読んだり予定を入れたり、実際に作業までしてくれます。ただ、メールやネットのページ、ファイルの中に、人間には見えない文字で「この中の情報を外に送れ」のような命令が隠されていることがあります。人間には見えなくてもAIはその文字まで読んでしまうので、何でも任せる設定にしていると、そのまま実行してしまうことがあります。仕事に必要な分だけ渡すのが基本です。</p>
+
+      <h3>Claude：つないだツールごとに3つから選ぶ</h3>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>操作</th><th>おすすめ</th></tr></thead>
+          <tbody>
+            <tr><td>読むだけの操作（探す・要約する）</td><td>常に許可</td></tr>
+            <tr><td>何かを変える操作（送信・削除・投稿）</td><td>承認が必要</td></tr>
+            <tr><td>使わない操作</td><td>ブロック</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>カスタマイズの「コネクタ」から設定します。アカウントの種類や画面によってこの3つが出ない場合は、送信や削除の確認が出た時に、中身を見てから許可してください。会社のプランなら、管理者が決められます。</p>
+      <a class="toollink" href="https://support.claude.com/en/articles/11176164-use-connectors-to-extend-claude-s-capabilities" target="_blank" rel="noopener">Claudeのコネクタ（Claude公式ヘルプ）</a>
+
+      <h3>ChatGPT：「読み取りアクションを許可」から</h3>
+      <p>設定のプラグインの権限で「読み取りアクションを許可」を選んでおくと、読むのは自由で、何かを変える前には確認してくれます。いきなり「すべてのアクションを許可」にはしないでください。</p>
+      <a class="toollink" href="https://help.openai.com/ja-jp/articles/20001256-plugins-in-chatgpt" target="_blank" rel="noopener">ChatGPTのプラグイン（OpenAI公式ヘルプ）</a>
+
+      <div class="note"><b>確認が出たら：</b>確認が出るたびに中身を見ずに「許可」を押す癖がつくと、確認してもらう意味がなくなります。何をしようとしているかだけは読んでから押してください。最初は確認ありで動かし、出てきたものを見ながら、少しずつ任せる範囲を広げていくのがおすすめです。</div>
+
+      <h3>Claude Codeを使っている方</h3>
+      <p>確認を全部飛ばすモードは、普段は使わないでください。触ってほしくないフォルダや、消してほしくないファイルは、決まりとして書いておけば基本は守ってくれます。絶対に止めたいものは、設定で禁止してもらうと確実です。</p>
+      <div class="prompt">
+        <div class="prompt-head"><b>触ってほしくないものを決まりに書く</b><button class="copy" type="button">コピー</button></div>
+        <pre>「（ここにフォルダ名）フォルダは触らない」「（ここにファイル名）は絶対に消さない」を、このフォルダの決まりとして書いておいてください。</pre>
+      </div>
+      <div class="prompt">
+        <div class="prompt-head"><b>絶対に止めたいものを設定で禁止する</b><button class="copy" type="button">コピー</button></div>
+        <pre>パスワードやAPIキーが入ったファイルを読むことと、外にデータを送るコマンドを、設定で禁止してください。
+何を禁止したかも一覧で教えてください。</pre>
+      </div>
+      <a class="toollink" href="https://code.claude.com/docs/en/permissions" target="_blank" rel="noopener">Claude Codeの権限の設定（公式ドキュメント）</a>
+
+      <h3>つないだツールの整理</h3>
+      <ul class="check">
+        <li>使わなくなったツールは、つなぐのをやめた（使わないのに任せる範囲だけ残っている状態そのものがリスク）</li>
+        <li>新しくつなぐツールは、料金も確認した（使った分だけお金がかかるものもあり、確認しないと想定外の請求が来ることがある）</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="sec" id="s11" data-short="AIの選び方">
+    <p class="sec-label rv">STEP 11</p>
+    <h2 class="sec-title rv">使うべきAIの選び方</h2>
+    <p class="sec-lead rv">「学習に使われない」ことと、「どこに保存されるか」は別の話です。</p>
+
+    <div class="card rv">
+      <p>学習をオフにしていても、入れた情報はAIの会社のコンピューターに保存されます。入れた情報を中国にあるコンピューターに保存すると書いているAIもあり、日本の個人情報保護委員会も2025年2月に利用者向けに注意を出しています。かといって、海外のAIだから危ない、日本のAIだから安心、でもありません。<span class="hl">入れた情報をどこに保存して何に使うのかを、公式にはっきり書いている会社のAIを選んでください。</span></p>
+      <a class="toollink" href="https://www.ppc.go.jp/news/careful_information/250203_alert_deepseek/" target="_blank" rel="noopener">個人情報保護委員会の注意喚起（DeepSeek）</a>
+
+      <h3>今の答え</h3>
+      <div class="grid">
+        <div class="grid-item tilt"><span class="tag">個人で使う</span><h4>3つの公式アプリで、学習をオフ</h4><p>ChatGPT・Claude・Geminiの公式アプリを使い、STEP 02〜04の設定をしてから使う。</p></div>
+        <div class="grid-item tilt"><span class="tag">会社の情報を扱う</span><h4>3つの会社向けプラン</h4><p>入れた内容を学習に使わないと約束している、会社向けのプランを使う。</p></div>
+      </div>
+
+      <h3>AIを選ぶ時の確認項目</h3>
+      <ul class="check">
+        <li>公式サイト・公式のアプリストアから入れた（検索で出てくる偽物のサイトや、名前の似た別のアプリに注意。作っている会社の名前まで確認する）</li>
+        <li>入れた情報をどこに保存して、何に使うのかが公式に書かれている</li>
+        <li>作っている会社がよく分からないAIアプリやブラウザの拡張機能に、仕事のデータを入れていない</li>
+        <li>ClaudeやChatGPTの名前が付いていても、公式が出しているものかを確認してから、大事なアカウントをつないだ</li>
+        <li>安いから・話題だから、で選ぶ前に、保存先と使い道を確認した</li>
+      </ul>
+
+      <h3>社員さんや外注さんと仕事をしている方へ</h3>
+      <p>自分だけ気をつけていても、周りの人がお客さんの情報をそのまま入れてしまったら意味がありません。使っていいAIと、入れていい情報を、1枚のルールにまとめて共有しておきましょう。</p>
+      <div class="prompt">
+        <div class="prompt-head"><b>チームのAIルールを1枚にまとめる</b><button class="copy" type="button">コピー</button></div>
+        <pre>社員と外注さん向けに、仕事でAIを使う時のルールを1枚にまとめてください。
+入れる項目は、使っていいAIとプラン、入れていい情報と入れてはいけない情報、名前や数字のぼかし方、うっかり入れてしまった時の連絡先です。
+誰が読んでも分かるように、短い言葉で書いてください。</pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="s12" data-short="今日やること">
+    <p class="sec-label rv">STEP 12</p>
+    <h2 class="sec-title rv">今日やる3つとチェックリスト</h2>
+    <p class="sec-lead rv">怖がって使わないのではなく、正しく守って使い倒す。まずは今日、この3つだけやってください。</p>
+
+    <div class="card rv">
+      <div class="step">
+        <div class="step-no">1</div>
+        <div class="step-body">
+          <h4>AIの学習の設定をオフにする</h4>
+          <p>STEP 02〜04。5分もかかりません。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-no">2</div>
+        <div class="step-body">
+          <h4>名前や数字は、ぼかして入れる</h4>
+          <p>STEP 07のプロンプトをそのまま使ってください。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-no">3</div>
+        <div class="step-body">
+          <h4>送る・消すは、確認してもらう設定にする</h4>
+          <p>STEP 10。読むのは任せて、変える操作は確認から。</p>
+        </div>
+      </div>
+
+      <h3>全部のチェックリスト</h3>
+      <ul class="check">
+        <li>ChatGPTの「すべての人のためにモデルを改善する」をオフにした</li>
+        <li>Claudeの「Claudeの改善にご協力ください」をオフにした</li>
+        <li>Geminiの「アクティビティの保存」をオフにするか、一時的なチャットと使い分けると決めた</li>
+        <li>ChatGPTとClaudeのメモリを開いて、覚えてほしくないものを消した</li>
+        <li>作った共有リンクを確認して、いらないものを消した</li>
+        <li>AIのアカウントとGoogleアカウントに2段階認証を設定した</li>
+        <li>つないだツールの権限を、読むだけは「常に許可」、送信・削除は「承認が必要」にした</li>
+        <li>使っていないツールのつなぎを外した</li>
+      </ul>
+      <div class="note"><b>それでもAIは使い倒す：</b>スマホも、出てきたばかりの頃は怖いと言われていましたが、今はロックをかけて、知らないアプリは入れずに毎日使っています。AIも同じで、これからの仕事のスタンダードです。守り方さえ押さえれば、あなたのキャリアを一気に加速させてくれる道具になります。</div>
+    </div>
+  </section>
+
+  <section class="closing rv">
+    <div class="closing-inner">
+      <h2>守りを固めたら、AIに仕事を渡していく</h2>
+      <p>設定と頼み方を押さえたら、あとは安心して、自分の面倒くさい仕事を1つずつAIに渡していくだけです。実際に運用していく中での改善や、最新のAI活用の情報は、公式LINEから参加できるコミュニティで配信しています。</p>
+
+      <div class="bonus">
+        <div><b>12</b><span>コミュニティ参加特典</span></div>
+        <div><b>20</b><span>セミナー参加特典</span></div>
+        <div><b>42</b><span>受け取れる特典の合計（LINEの10大特典を含む）</span></div>
+      </div>
+
+      <p>公式LINEから参加できる「AI×SNS攻略 月額0円コミュニティ」では、追加12大特典に加えて、最新のAI×マーケティング情報を配信しています。さらに「AI駆動型コンテンツビジネス 0→100完全攻略セミナー」にご参加いただくと、20大特典を受け取れます。案内はどちらも公式LINEから届きます。</p>
+
+      <a class="btn" href="#s1">もう一度、最初から見る</a>
+    </div>
+  </section>
+
+  <p class="foot">星川ユウヤ｜AIマーケちゃんねる</p>
+
+</div>
+
+<button class="totop" id="totop" type="button" aria-label="ページ上部へ戻る">↑</button>
+
+<script>
+(function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reduce && 'IntersectionObserver' in window) document.documentElement.classList.add('motion-ready');
+
+  var bar = document.getElementById('bar');
+  var totop = document.getElementById('totop');
+  function onScroll(){
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    var p = max > 0 ? (h.scrollTop / max) * 100 : 0;
+    if (bar) bar.style.width = p + '%';
+    if (totop) totop.classList.toggle('show', h.scrollTop > 640);
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+  if (totop) totop.addEventListener('click', function(){
+    window.scrollTo({top:0, behavior: reduce ? 'auto' : 'smooth'});
+  });
+
+  var rv = document.querySelectorAll('.rv');
+  if ('IntersectionObserver' in window && !reduce){
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, {rootMargin:'0px 0px -12% 0px', threshold:0});  
+    rv.forEach(function(el){ if (el.offsetHeight > window.innerHeight) { el.classList.add('in'); } else { io.observe(el); } });  
+  } else {
+    rv.forEach(function(el){ el.classList.add('in'); });
+  }
+
+  setTimeout(function(){ rv.forEach(function(el){ el.classList.add('in'); }); }, 2500);
+
+  var secs = Array.prototype.slice.call(document.querySelectorAll('section.sec[id]'));
+  var tocLinks = Array.prototype.slice.call(document.querySelectorAll('.toc a'));
+  var navLinks = Array.prototype.slice.call(document.querySelectorAll('.sidenav a'));
+  if (secs.length && 'IntersectionObserver' in window){
+    var spy = new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if(!e.isIntersecting) return;
+        var id = '#' + e.target.id;
+        tocLinks.forEach(function(a){ a.classList.toggle('active', a.getAttribute('href') === id); });
+        navLinks.forEach(function(a){ a.classList.toggle('active', a.getAttribute('href') === id); });
+      });
+    }, {rootMargin:'-45% 0px -45% 0px'});
+    secs.forEach(function(s){ spy.observe(s); });
+  }
+
+  document.querySelectorAll('.prompt .copy').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var pre = btn.closest('.prompt').querySelector('pre');
+      if(!pre) return;
+      var text = pre.innerText;
+      var done = function(){
+        var old = btn.textContent;
+        btn.textContent = 'コピーしました';
+        btn.classList.add('done');
+        setTimeout(function(){ btn.textContent = old; btn.classList.remove('done'); }, 1600);
+      };
+      if (navigator.clipboard && window.isSecureContext){
+        navigator.clipboard.writeText(text).then(done, fallback);
+      } else { fallback(); }
+      function fallback(){
+        var ta = document.createElement('textarea');
+        ta.value = text; ta.setAttribute('readonly','');
+        ta.style.position='fixed'; ta.style.opacity='0';
+        document.body.appendChild(ta); ta.select();
+        try { if (document.execCommand('copy')) done(); else btn.textContent = '選択してコピー'; } catch(e){ btn.textContent = '選択してコピー'; }
+        document.body.removeChild(ta);
+      }
+    });
+  });
+
+  if (reduce) return;
+
+  var hero = document.getElementById('hero');
+  var glow = document.getElementById('glow');
+  if (hero && glow){
+    hero.addEventListener('pointermove', function(ev){
+      var r = hero.getBoundingClientRect();
+      glow.style.setProperty('--mx', ((ev.clientX - r.left) / r.width * 100) + '%');
+      glow.style.setProperty('--my', ((ev.clientY - r.top) / r.height * 100) + '%');
+    });
+  }
+
+  if (window.matchMedia('(hover: hover) and (pointer: fine)').matches){
+    document.querySelectorAll('.tilt').forEach(function(el){
+      el.addEventListener('pointermove', function(ev){
+        var r = el.getBoundingClientRect();
+        var rx = ((ev.clientY - r.top) / r.height - .5) * -5;
+        var ry = ((ev.clientX - r.left) / r.width - .5) * 5;
+        el.style.transform = 'perspective(760px) rotateX(' + rx + 'deg) rotateY(' + ry + 'deg) translateY(-3px)';
+      });
+      el.addEventListener('pointerleave', function(){ el.style.transform = ''; });
+    });
+  }
+})();
+</script>
+</body>
+</html>
