@@ -362,7 +362,7 @@ td:first-child{min-width:7.5em}
       <a class="toollink" href="https://help.openai.com/en/articles/7730893-data-controls-faq" target="_blank" rel="noopener">Data controls in ChatGPT（OpenAI公式ヘルプ）</a>
 
       <h3>履歴に残さないで話す「一時チャット」</h3>
-      <p>画面の上にあるボタンから切り替えられます。一時チャットの会話は履歴に残らず、メモリにも使われず、学習にも使われません。ただし、安全のために最大30日は会社の側に保管されます。「何を入れても大丈夫」ではないので、履歴に残したくない相談をする時に使い分けてください。</p>
+      <p>新しいチャットの画面の右上にある「一時」ボタンから切り替えられます。一時チャットの会話は履歴に残らず、メモリにも使われず、学習にも使われません。ただし、安全のために最大30日は会社の側に保管されます。「何を入れても大丈夫」ではないので、履歴に残したくない相談をする時に使い分けてください。</p>
       <a class="toollink" href="https://help.openai.com/en/articles/8914046-temporary-chat-in-chatgpt" target="_blank" rel="noopener">Temporary chat in ChatGPT（OpenAI公式ヘルプ）</a>
 
       <h3>AIが覚えていること（メモリ）を見直す</h3>
@@ -399,7 +399,7 @@ td:first-child{min-width:7.5em}
       <a class="toollink" href="https://privacy.claude.com/en/articles/10023580-is-my-data-used-for-model-training" target="_blank" rel="noopener">Is my data used for model training?（Anthropic公式）</a>
 
       <h3>履歴に残さないで話す「シークレットチャット」</h3>
-      <p>画面の上にあるボタンから切り替えられます。シークレットチャットの会話は、学習の設定がオンのままでも学習に使われません。ただし、安全のために最大30日は会社の側に保管されます。</p>
+      <p>新しいチャットの画面の右上にある、おばけのアイコンから切り替えられます。シークレットチャットの会話は、学習の設定がオンのままでも学習に使われません。ただし、30日間は会社の側に保管されます。</p>
 
       <h3>AIが覚えていること（メモリ）を見直す</h3>
       <p>Claudeも、過去の会話から仕事のことを覚えて使ってくれます。「設定」の中のメモリの項目（画面によっては「Your Claude」→ メモリの「管理」）から、覚えている内容を見て、直したり消したりできます。会話の中で「〇〇のことは忘れて」と頼むこともできます。</p>
@@ -430,10 +430,10 @@ td:first-child{min-width:7.5em}
       </div>
       <a class="toollink" href="https://support.google.com/gemini/answer/13278892?hl=ja" target="_blank" rel="noopener">Gemini アプリ アクティビティ（Google公式ヘルプ）</a>
 
-      <div class="note"><b>オフにする時の注意：</b>Geminiはここをオフにすると、過去の会話が見返せなくなったり、GmailやGoogleドライブとの連携が使えなくなったりします。オンのままだと、会話はGoogleのAIの改善に使われ、人がチェックすることもあります。連携のためにオンにしておく人は、仕事の情報は入れずに、次の「一時的なチャット」と使い分けてください。</div>
+      <div class="note"><b>オフにする時の注意：</b>Geminiはここをオフにすると、アプリの中で過去の会話の一覧が使えなくなったり、GmailやGoogleドライブとの連携が使えなくなったりします。オンのままだと、会話はGoogleのAIの改善に使われ、人がチェックすることもあります。連携のためにオンにしておく人は、仕事の情報は入れずに、次の「一時チャット」と使い分けてください。</div>
 
-      <h3>履歴に残さないで話す「一時的なチャット」</h3>
-      <p>画面のボタンから切り替えられます。会話は履歴に残らず、学習にも使われません。ただし、最長72時間は保存されます。</p>
+      <h3>履歴に残さないで話す「一時チャット」</h3>
+      <p>左の「チャットを新規作成」の横のボタンから切り替えられます。会話は履歴に残らず、学習にも使われません。ただし、最長72時間は保存されます。</p>
     </div>
   </section>
 
@@ -449,7 +449,7 @@ td:first-child{min-width:7.5em}
           <tbody>
             <tr><td>個人向け・無料</td><td>設定がオンなら学習に使われる</td><td>STEP 02〜04で自分でオフにする</td></tr>
             <tr><td>個人向け・有料（ChatGPT Plus・Claude Pro など）</td><td>無料と同じ。設定がオンなら学習に使われる</td><td>無料と同じく、自分でオフにする</td></tr>
-            <tr><td>会社向けのプラン（ChatGPTのBusiness・Enterprise、ClaudeのTeam・Enterprise、Google Workspace など）</td><td>入れた内容を学習に使わないと各社が約束している</td><td>会社の情報を本格的に扱うなら、こちらを使う</td></tr>
+            <tr><td>会社向けのプラン（ChatGPTのBusiness・Enterprise、ClaudeのTeam・Enterprise、Google Workspace など）</td><td>初期設定では、入れた内容を学習に使わないと各社が公式に書いている</td><td>会社の情報を本格的に扱うなら、こちらを使う</td></tr>
           </tbody>
         </table>
       </div>
@@ -645,10 +645,17 @@ td:first-child{min-width:7.5em}
       </div>
       <div class="prompt">
         <div class="prompt-head"><b>絶対に止めたいものを設定で禁止する</b><button class="copy" type="button">コピー</button></div>
-        <pre>パスワードやAPIキーが入ったファイルを読むことと、外にデータを送るコマンドを、設定で禁止してください。
+        <pre>パスワードやAPIキーが入ったファイルは読まない、外にデータを送るコマンドは使わない、という決まりをClaude Codeの設定に入れてください。
 何を禁止したかも一覧で教えてください。</pre>
       </div>
       <a class="toollink" href="https://code.claude.com/docs/en/permissions" target="_blank" rel="noopener">Claude Codeの権限の設定（公式ドキュメント）</a>
+
+      <h3>任せる範囲を月1回見直す</h3>
+      <p>任せる範囲は、使っているうちに少しずつ増えていきます。月に1回くらい、Claude Codeにこう聞いて、AIに何を任せているかを自分で確かめてください。いらないものがあれば、そのまま「これは外して」と頼めば大丈夫です。</p>
+      <div class="prompt">
+        <div class="prompt-head"><b>今の許可を確かめる</b><button class="copy" type="button">コピー</button></div>
+        <pre>今の許可リストを教えてください。</pre>
+      </div>
 
       <h3>つないだツールの整理</h3>
       <ul class="check">
@@ -664,13 +671,13 @@ td:first-child{min-width:7.5em}
     <p class="sec-lead rv">「学習に使われない」ことと、「どこに保存されるか」は別の話です。</p>
 
     <div class="card rv">
-      <p>学習をオフにしていても、入れた情報はAIの会社のコンピューターに保存されます。入れた情報を中国にあるコンピューターに保存すると書いているAIもあり、日本の個人情報保護委員会も2025年2月に利用者向けに注意を出しています。かといって、海外のAIだから危ない、日本のAIだから安心、でもありません。<span class="hl">入れた情報をどこに保存して何に使うのかを、公式にはっきり書いている会社のAIを選んでください。</span></p>
+      <p>学習をオフにしていても、入れた情報はAIの会社のコンピューターに保存されます。入れた情報を中国にあるコンピューターに保存すると書いているAIもあり、日本の個人情報保護委員会も2025年2月に利用者向けに情報を出しています（「DeepSeekに関する情報提供」）。かといって、海外のAIだから危ない、日本のAIだから安心、でもありません。<span class="hl">入れた情報をどこに保存して何に使うのかを、公式にはっきり書いている会社のAIを選んでください。</span></p>
       <a class="toollink" href="https://www.ppc.go.jp/news/careful_information/250203_alert_deepseek/" target="_blank" rel="noopener">個人情報保護委員会の注意喚起（DeepSeek）</a>
 
       <h3>今の答え</h3>
       <div class="grid">
         <div class="grid-item tilt"><span class="tag">個人で使う</span><h4>3つの公式アプリで、学習をオフ</h4><p>ChatGPT・Claude・Geminiの公式アプリを使い、STEP 02〜04の設定をしてから使う。</p></div>
-        <div class="grid-item tilt"><span class="tag">会社の情報を扱う</span><h4>3つの会社向けプラン</h4><p>入れた内容を学習に使わないと約束している、会社向けのプランを使う。</p></div>
+        <div class="grid-item tilt"><span class="tag">会社の情報を扱う</span><h4>3つの会社向けプラン</h4><p>初期設定で入れた内容を学習に使わないと公式に書いている、会社向けのプランを使う。</p></div>
       </div>
 
       <h3>AIを選ぶ時の確認項目</h3>
@@ -725,12 +732,13 @@ td:first-child{min-width:7.5em}
       <ul class="check">
         <li>ChatGPTの「すべての人のためにモデルを改善する」をオフにした</li>
         <li>Claudeの「AIモデルの改善を支援する」をオフにした</li>
-        <li>Geminiの「アクティビティの保存」をオフにするか、一時的なチャットと使い分けると決めた</li>
+        <li>Geminiの「アクティビティの保存」をオフにするか、一時チャットと使い分けると決めた</li>
         <li>ChatGPTとClaudeのメモリを開いて、覚えてほしくないものを消した</li>
         <li>作った共有リンクを確認して、いらないものを消した</li>
         <li>AIのアカウントとGoogleアカウントに2段階認証を設定した</li>
         <li>つないだツールの権限を、読むだけは「常に許可」、送信・削除は「承認が必要」にした</li>
         <li>使っていないツールのつなぎを外した</li>
+        <li>月に1回、Claude Codeに「今の許可リストを教えてください。」と聞いて見直すと決めた</li>
       </ul>
       <div class="note"><b>それでもAIは使い倒す：</b>スマホも、出てきたばかりの頃は怖いと言われていましたが、今はロックをかけて、知らないアプリは入れずに毎日使っています。AIも同じで、これからの仕事のスタンダードです。守り方さえ押さえれば、あなたのキャリアを一気に加速させてくれる道具になります。</div>
     </div>
